@@ -26,7 +26,7 @@
      C'est une regle de securite des navigateurs, pas une limite de ce code.
    ========================================================================== */
 
-const VERSION = 'jeux-reflexion-v1';
+const VERSION = 'jeux-reflexion-v2';
 const NOM_DU_CACHE = VERSION;
 
 /* Liste EXHAUSTIVE des fichiers necessaires au fonctionnement hors-ligne.

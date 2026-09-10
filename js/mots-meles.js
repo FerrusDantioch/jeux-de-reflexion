@@ -360,8 +360,10 @@ window.Jeux = window.Jeux || {};
     if (index === null) return;
     evenement.preventDefault();
     // La capture garantit qu'on recevra bien les evenements suivants meme si
-    // le doigt sort de la grille.
-    vue.grille.setPointerCapture(evenement.pointerId);
+    // le doigt sort de la grille. On la protege par un try/catch : le
+    // navigateur refuse la capture si le pointeur n'est plus actif, et cette
+    // exception interromprait la selection en cours.
+    try { vue.grille.setPointerCapture(evenement.pointerId); } catch (e) { /* sans capture, ca marche quand meme */ }
     selectionEnCours = { depart: index, cases: [index] };
     afficherSelection();
   }

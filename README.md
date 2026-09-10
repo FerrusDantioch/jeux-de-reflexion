@@ -15,6 +15,27 @@ entièrement jouables **hors connexion** :
 Aucune bibliothèque externe, aucun serveur, aucune donnée envoyée sur internet :
 uniquement du HTML, du CSS et du JavaScript. Tout le code est commenté en français.
 
+## Aperçu
+
+<table>
+  <tr>
+    <td width="50%"><img src="captures/sudoku.png" alt="Sudoku : grille en cours, case sélectionnée avec des notes au crayon"></td>
+    <td width="50%"><img src="captures/mots-meles.png" alt="Mots Mêlés : trois mots trouvés et barrés dans la liste"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Sudoku</b> — mode crayon, surlignage de la ligne, de la colonne et du bloc</td>
+    <td align="center"><b>Mots Mêlés</b> — sélection par glissement, mots barrés au fur et à mesure</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="captures/demineur.png" alt="Démineur : zone ouverte en cascade et deux drapeaux posés"></td>
+    <td width="50%"><img src="captures/memoire.png" alt="Jeu de mémoire : cinq paires trouvées et une carte retournée"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Démineur</b> — révélation en cascade, drapeaux, compteur de mines</td>
+    <td align="center"><b>Mémoire</b> — paires trouvées, compteur de coups et chronomètre</td>
+  </tr>
+</table>
+
 ---
 
 ## 1. Essayer l'application
@@ -83,7 +104,9 @@ JeuxDeReflexion/
 │   ├── memoire.js        Jeu 4 — distribution des cartes, comparaison
 │   └── app.js            Menu, navigation, service worker, installation
 │
-└── icones/               Icônes de l'application (PNG)
+├── icones/               Icônes de l'application (PNG)
+└── captures/             Captures d'écran affichées dans ce fichier
+                          (non utilisées par l'application)
 ```
 
 ### Comment les jeux se branchent sur le menu
