@@ -214,3 +214,16 @@ ne pas saturer la mémoire sur la grande grille du niveau Expert.
 la souris, au doigt et au stylet. L'application est utilisable entièrement au
 clavier sur ordinateur (flèches, chiffres, `Ctrl+Z` / `Ctrl+Y`, `N` pour le
 crayon, `H` pour un indice).
+
+---
+
+## Licence
+
+Distribué sous licence **[MIT](LICENSE)**.
+
+Vous pouvez utiliser, modifier et redistribuer ce code librement, y compris à
+des fins commerciales, à la seule condition de conserver la mention de
+copyright et le texte de la licence. Le logiciel est fourni « en l'état »,
+sans aucune garantie.
+
+© 2026 FerrusDantioch
