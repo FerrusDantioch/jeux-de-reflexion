@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  Jeux de Réflexion — Progressive Web App (PWA) 100 % hors-ligne
+  ----------------------------------------------------------------------------
+  Cette page est la SEULE page HTML de l'application : on parle d'une
+  « application monopage » (Single Page Application). Au lieu de charger une
+  nouvelle page pour chaque jeu, on affiche / masque des sections appelées
+  « écrans ». C'est plus rapide, et surtout cela simplifie énormément la mise
+  en cache hors-ligne (un seul fichier HTML à mémoriser).
+  ============================================================================
+-->
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <!--
+    viewport : indispensable sur mobile.
+    - width=device-width      : la page fait la largeur réelle de l'écran
+    - initial-scale=1         : pas de zoom au démarrage
+    - viewport-fit=cover      : la page passe sous l'encoche des téléphones
+    - user-scalable=no        : évite le zoom accidentel pendant un glissement
+                                de doigt (utile pour les Mots Mêlés)
+  -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+
+  <title>Jeux de Réflexion</title>
+  <meta name="description" content="Sudoku, Mots Mêlés, Démineur et Jeu de Mémoire — jouables hors-ligne.">
+
+  <!-- Couleur de la barre système du téléphone une fois l'appli installée -->
+  <meta name="theme-color" content="#10151f">
+
+  <!-- Compatibilité iPhone / iPad (Safari n'utilise pas encore tout le manifest) -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Jeux">
+  <link rel="apple-touch-icon" href="./icones/icone-180.png">
+
+  <!-- Le manifest décrit l'application au système (nom, icônes, couleurs...) -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="./icones/favicon.png">
+
+  <!-- Feuilles de style : la charte commune, puis les styles propres aux jeux -->
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/jeux.css">
+</head>
+
+<body>
+
+  <!-- ====================== BARRE DU HAUT (toujours visible) ================ -->
+  <header class="entete">
+    <button id="bouton-retour" class="bouton-icone" type="button" aria-label="Revenir en arrière" hidden>
+      <span aria-hidden="true">←</span>
+    </button>
+
+    <h1 id="titre-appli" class="titre-appli">Jeux de Réflexion</h1>
+
+    <!-- Ce bouton n'apparaît que si le navigateur propose l'installation -->
+    <button id="bouton-installer" class="bouton-icone" type="button" aria-label="Installer l'application" hidden>
+      <span aria-hidden="true">⤓</span>
+    </button>
+  </header>
+
+  <main id="contenu" class="contenu">
+
+    <!-- ======================= ÉCRAN 1 : ACCUEIL ========================== -->
+    <section id="ecran-accueil" class="ecran" aria-label="Choix du jeu">
+      <p class="intro">Choisissez un jeu. Tout fonctionne sans connexion internet.</p>
+
+      <!-- Les cartes des jeux sont créées automatiquement par js/app.js -->
+      <div id="liste-jeux" class="grille-jeux"></div>
+
+      <p class="pied-page">
+        Vos parties et vos records sont enregistrés uniquement sur cet appareil.
+      </p>
+    </section>
+
+    <!-- ================== ÉCRAN 2 : CHOIX DE LA DIFFICULTÉ ================ -->
+    <section id="ecran-niveaux" class="ecran" aria-label="Choix de la difficulté" hidden>
+      <h2 id="titre-niveaux" class="titre-section">Difficulté</h2>
+
+      <!-- Bouton « Reprendre » : affiché seulement si une partie est sauvegardée -->
+      <button id="bouton-reprendre" class="bouton bouton-principal bouton-large" type="button" hidden>
+        Reprendre la partie en cours
+      </button>
+
+      <!-- Sélecteur de thème : utilisé par les Mots Mêlés et le jeu de Mémoire -->
+      <div id="bloc-themes" class="bloc-options" hidden>
+        <h3 class="titre-option">Thème</h3>
+        <div id="liste-themes" class="liste-choix" role="radiogroup" aria-label="Thème"></div>
+      </div>
+
+      <div class="bloc-options">
+        <h3 class="titre-option">Niveau</h3>
+        <div id="liste-niveaux" class="liste-niveaux"></div>
+      </div>
+    </section>
+
+    <!-- ========================= ÉCRAN 3 : LE JEU ========================= -->
+    <section id="ecran-jeu" class="ecran" aria-label="Partie en cours" hidden>
+      <!-- Chaque module de jeu construit son interface à l'intérieur de ce bloc -->
+      <div id="zone-jeu"></div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FENÊTRE MODALE RÉUTILISABLE ==================== -->
+  <!--
+    Une seule modale sert à tous les messages : victoire, défaite, confirmation.
+    Elle est pilotée par la fonction Outils.modale() (voir js/outils.js).
+  -->
+  <div id="fond-modale" class="fond-modale" hidden>
+    <div class="modale" role="dialog" aria-modal="true" aria-labelledby="titre-modale">
+      <h2 id="titre-modale" class="titre-modale"></h2>
+      <div id="corps-modale" class="corps-modale"></div>
+      <div id="actions-modale" class="actions-modale"></div>
+    </div>
+  </div>
+
+  <!-- Petite bulle d'information temporaire (« Record battu ! », etc.) -->
+  <div id="bulle-info" class="bulle-info" role="status" aria-live="polite" hidden></div>
+
+  <!--
+    ORDRE DES SCRIPTS (important) :
+    1. les outils communs (stockage, chronomètre, aides diverses)
+    2. les quatre jeux, qui s'inscrivent eux-mêmes dans le registre window.Jeux
+    3. app.js en dernier : il lit le registre et construit le menu
+  -->
+  <script src="./js/stockage.js"></script>
+  <script src="./js/outils.js"></script>
+  <script src="./js/sudoku.js"></script>
+  <script src="./js/mots-meles.js"></script>
+  <script src="./js/demineur.js"></script>
+  <script src="./js/memoire.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>

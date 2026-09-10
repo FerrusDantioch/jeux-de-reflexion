@@ -1,0 +1,373 @@
+/* ==========================================================================
+   jeux.css - Styles specifiques a chacun des quatre jeux
+   --------------------------------------------------------------------------
+   Chaque jeu a sa propre section. Les couleurs viennent des variables
+   definies dans style.css : on ne redefinit jamais une couleur en dur ici,
+   ce qui garantit que les quatre jeux restent visuellement coherents.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. SUDOKU
+   ========================================================================== */
+
+.grille-sudoku {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  /* aspect-ratio : la grille reste toujours carree quelle que soit la largeur */
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  background: var(--bordure);      /* sert de couleur aux lignes de separation */
+  border: 3px solid var(--bordure);
+  border-radius: var(--rayon-petit);
+  overflow: hidden;
+  gap: 1px;                        /* le fond apparait dans les interstices */
+  touch-action: manipulation;      /* pas de double-tap-zoom sur la grille */
+}
+
+.case-sudoku {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  font: inherit;
+  /* La taille du texte suit la largeur de la grille : lisible partout. */
+  font-size: min(5.4vw, 26px);
+  font-weight: 600;
+  color: var(--accent-clair);
+  background: var(--surface);
+  border: none;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+/* Traits epais qui delimitent les 9 blocs de 3x3 cases.
+   On utilise une BORDURE et non une ombre : grace a box-sizing: border-box,
+   la bordure est dessinee a l'interieur de la case, qui garde donc exactement
+   la meme taille que les autres. Une ombre, elle, serait recouverte par la
+   case voisine dessinee juste apres. */
+.case-sudoku.bord-droit { border-right: 2px solid var(--bordure); }
+.case-sudoku.bord-bas   { border-bottom: 2px solid var(--bordure); }
+
+/* Chiffres imposes par la grille de depart : on ne peut pas les modifier */
+.case-sudoku.donnee {
+  color: var(--texte);
+  font-weight: 700;
+  cursor: default;
+}
+
+/* Case remplie par le bouton « Indice » */
+.case-sudoku.revelee { color: var(--alerte); }
+
+/* Case dont le chiffre est faux (uniquement si la detection est activee) */
+.case-sudoku.erreur { color: var(--erreur); }
+
+/* Aides visuelles : ligne/colonne/bloc de la case selectionnee, memes chiffres */
+.case-sudoku.surlignee  { background: #1d2739; }
+.case-sudoku.meme-valeur { background: #26344f; }
+.case-sudoku.selectionnee {
+  background: var(--accent);
+  color: #071021;
+}
+.case-sudoku.selectionnee.donnee { color: #071021; }
+
+/* Cas particulier important : juste apres avoir saisi un chiffre, la case est
+   a la fois SELECTIONNEE (fond bleu, texte fonce) et EN ERREUR (texte rouge).
+   Le fond bleu l'emporterait et le rouge deviendrait invisible, precisement
+   au moment ou le joueur a besoin de le voir. On passe donc toute la case en
+   rouge : le message reste lisible sans ambiguite. */
+.case-sudoku.selectionnee.erreur {
+  background: var(--erreur);
+  color: #10151f;
+}
+
+/* Les petites notes au crayon : une mini-grille 3x3 dans la case */
+.notes-sudoku {
+  position: absolute;
+  inset: 1px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  font-size: min(2.4vw, 11px);
+  font-weight: 500;
+  line-height: 1;
+  color: var(--texte-doux);
+  pointer-events: none;            /* les clics traversent vers la case */
+}
+.notes-sudoku span { display: grid; place-items: center; }
+.case-sudoku.selectionnee .notes-sudoku { color: #0e1a2e; }
+
+/* --- Pave numerique tactile --- */
+.pave-numerique {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  max-width: 460px;
+  margin: 12px auto 0;
+}
+.touche-chiffre {
+  font: inherit;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--texte);
+  background: var(--surface);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-petit);
+  padding: 10px 0;
+  min-height: 48px;
+  cursor: pointer;
+}
+.touche-chiffre:hover  { background: var(--surface-haute); border-color: var(--accent); }
+.touche-chiffre:active { transform: scale(0.94); }
+/* Un chiffre deja place 9 fois n'est plus utile : on l'estompe */
+.touche-chiffre.epuisee { opacity: 0.3; }
+.touche-chiffre.gomme   { font-size: 1.1rem; }
+
+/* Petit temoin « mode crayon actif » */
+.indicateur-notes {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--alerte);
+}
+.indicateur-notes[hidden] { display: none; }
+
+
+/* ==========================================================================
+   2. MOTS MELES
+   ========================================================================== */
+
+.zone-mots { max-width: 460px; margin: 0 auto; }
+
+.grille-mots {
+  display: grid;
+  /* --colonnes est defini par le JavaScript selon la difficulte.
+     On impose aussi les LIGNES : sans cela, elles s'adapteraient a la hauteur
+     des lettres au lieu de remplir le carre, et la grille serait ecrasee. */
+  grid-template-columns: repeat(var(--colonnes), 1fr);
+  grid-template-rows: repeat(var(--colonnes), 1fr);
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  gap: 1px;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-petit);
+  /* touch-action: none => le navigateur ne tente pas de faire defiler la page
+     pendant que le doigt glisse pour tracer un mot. Indispensable ici. */
+  touch-action: none;
+}
+
+.case-mot {
+  display: grid;
+  place-items: center;
+  /* La taille des lettres est calculee en JavaScript et appliquee au
+     conteneur .grille-mots ; les cases en heritent simplement. */
+  font-size: 1em;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--texte);
+  background: transparent;
+  border-radius: 3px;
+  transition: background 0.08s, color 0.08s;
+}
+
+/* Lettres survolees pendant le glissement du doigt / de la souris */
+.case-mot.en-cours { background: var(--accent); color: #071021; }
+
+/* Lettres appartenant a un mot deja trouve */
+.case-mot.trouvee  { background: rgba(62, 207, 142, 0.22); color: var(--succes); }
+
+/* Une lettre peut appartenir a la fois a un mot trouve et a la selection */
+.case-mot.trouvee.en-cours { background: var(--accent); color: #071021; }
+
+/* --- Liste des mots a trouver --- */
+.liste-mots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 10px;
+  margin-top: 14px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+}
+.mot-a-trouver {
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+.mot-a-trouver.trouve {
+  color: var(--texte-doux);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  opacity: 0.65;
+}
+
+
+/* ==========================================================================
+   3. DEMINEUR
+   ========================================================================== */
+
+/* Conteneur qui autorise le defilement horizontal pour la grille « Expert »,
+   trop large pour tenir sur un ecran de telephone. */
+.cadre-demineur {
+  overflow-x: auto;
+  padding-bottom: 6px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.grille-demineur {
+  display: grid;
+  /* --colonnes et --taille-case sont definis par le JavaScript */
+  grid-template-columns: repeat(var(--colonnes), var(--taille-case));
+  gap: 2px;
+  width: max-content;              /* la grille garde sa taille reelle */
+  margin: 0 auto;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-petit);
+  touch-action: manipulation;
+}
+
+.case-mine {
+  width: var(--taille-case);
+  height: var(--taille-case);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  font: inherit;
+  font-size: calc(var(--taille-case) * 0.58);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--texte);
+  background: var(--surface-haute);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.08s;
+}
+.case-mine:hover { background: #2a3752; }
+
+/* Case deja decouverte : fond plus sombre, plus de relief */
+.case-mine.decouverte {
+  background: var(--fond);
+  cursor: default;
+}
+.case-mine.decouverte:hover { background: var(--fond); }
+
+/* Couleur du chiffre selon le nombre de mines voisines (comme le jeu original) */
+.case-mine.n1 { color: #5b8cff; }
+.case-mine.n2 { color: #3ecf8e; }
+.case-mine.n3 { color: #ff6b6b; }
+.case-mine.n4 { color: #b98cff; }
+.case-mine.n5 { color: #ffc857; }
+.case-mine.n6 { color: #4ad6d6; }
+.case-mine.n7 { color: #e7ecf6; }
+.case-mine.n8 { color: #93a1bd; }
+
+.case-mine.drapeau  { color: var(--alerte); }
+.case-mine.mine     { background: rgba(255, 107, 107, 0.18); color: var(--erreur); }
+.case-mine.explosee { background: var(--erreur); color: #10151f; }
+/* Drapeau pose au mauvais endroit, revele en fin de partie */
+.case-mine.mauvais-drapeau { background: rgba(255, 107, 107, 0.12); color: var(--erreur); text-decoration: line-through; }
+
+
+/* ==========================================================================
+   4. JEU DE MEMOIRE
+   ========================================================================== */
+
+.grille-memoire {
+  display: grid;
+  grid-template-columns: repeat(var(--colonnes), 1fr);
+  gap: 8px;
+  max-width: 460px;
+  margin: 0 auto;
+  touch-action: manipulation;
+}
+
+/* La carte est le « cadre » : elle donne la perspective 3D. */
+.carte-memoire {
+  /* Cartes carrees : c'est le seul format qui tienne a l'ecran aussi bien
+     avec 12 cartes qu'avec 36, sans obliger a faire defiler la page. */
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  perspective: 700px;              /* profondeur de l'effet 3D */
+}
+
+/* L'interieur est ce qui tourne reellement sur lui-meme. */
+.interieur-carte {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;    /* les enfants gardent leur position 3D */
+  transition: transform 0.4s cubic-bezier(0.3, 0.8, 0.4, 1.1);
+}
+.carte-memoire.retournee .interieur-carte { transform: rotateY(180deg); }
+
+/* Les deux faces se superposent ; on cache celle qui est de dos. */
+.face-carte {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: clamp(1.4rem, 8vw, 2.4rem);
+  border-radius: var(--rayon-petit);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.face-dos {
+  background: linear-gradient(150deg, var(--surface-haute), var(--surface));
+  border: 1px solid var(--bordure);
+  color: var(--accent);
+  font-size: 1.5rem;
+}
+
+.face-avant {
+  background: var(--surface-haute);
+  border: 1px solid var(--bordure);
+  transform: rotateY(180deg);      /* placee « derriere » au repos */
+}
+
+/* Paire trouvee : la carte reste face visible et se teinte en vert */
+.carte-memoire.appariee .face-avant {
+  background: rgba(62, 207, 142, 0.18);
+  border-color: var(--succes);
+}
+.carte-memoire.appariee { cursor: default; }
+
+/* Petite animation quand deux cartes ne correspondent pas */
+.carte-memoire.ratee .interieur-carte { animation: secousse 0.4s; }
+@keyframes secousse {
+  0%, 100% { transform: rotateY(180deg) translateX(0); }
+  25%      { transform: rotateY(180deg) translateX(-5px); }
+  75%      { transform: rotateY(180deg) translateX(5px); }
+}
+
+/* Pastille utilisee par le theme « Couleurs » */
+.pastille-couleur {
+  width: 62%;
+  height: 62%;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.25);
+}
+
+
+/* ==========================================================================
+   AJUSTEMENTS POUR LES TRES PETITS ECRANS
+   ========================================================================== */
+@media (max-width: 380px) {
+  .contenu       { padding: 12px; }
+  .bandeau-jeu   { padding: 8px; }
+  .info-jeu .valeur { font-size: 1rem; }
+  .barre-actions .bouton { min-width: 72px; padding: 8px 10px; font-size: 0.9rem; }
+}

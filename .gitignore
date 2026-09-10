@@ -1,0 +1,10 @@
+# Réglages locaux de l'éditeur / de Claude Code (propres à chaque machine)
+.claude/
+
+# Fichiers créés automatiquement par les systèmes d'exploitation
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archives de livraison
+*.zip
