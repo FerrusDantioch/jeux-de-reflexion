@@ -16,7 +16,7 @@ const App = (function () {
   'use strict';
 
   // Ordre d'affichage des jeux sur l'ecran d'accueil.
-  const ORDRE_DES_JEUX = ['sudoku', 'mots-meles', 'demineur', 'memoire'];
+  const ORDRE_DES_JEUX = ['sudoku', 'mots-meles', 'demineur', 'memoire', 'labyrinthe'];
 
   /* --- Raccourcis vers les elements de la page --------------------------- */
   const ecrans = {

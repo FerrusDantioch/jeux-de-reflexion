@@ -2,7 +2,7 @@
 
 **▶ Jouer en ligne : https://ferrusdantioch.github.io/jeux-de-reflexion/**
 
-Une application web installable (PWA) qui regroupe **quatre jeux de logique**,
+Une application web installable (PWA) qui regroupe **cinq jeux de logique**,
 entièrement jouables **hors connexion** :
 
 | Jeu | Contenu |
@@ -11,6 +11,7 @@ entièrement jouables **hors connexion** :
 | **Mots Mêlés** | 5 thèmes français, grilles générées aléatoirement. 3 niveaux. |
 | **Démineur** | 3 niveaux, premier clic toujours sans danger. |
 | **Mémoire** | Jeu des paires, 3 thèmes et 3 niveaux. |
+| **Labyrinthe** | 4 difficultés x 4 tailles, indice, brouillard, labyrinthes partageables par code. |
 
 Aucune bibliothèque externe, aucun serveur, aucune donnée envoyée sur internet :
 uniquement du HTML, du CSS et du JavaScript. Tout le code est commenté en français.
@@ -93,21 +94,28 @@ JeuxDeReflexion/
 │
 ├── css/
 │   ├── style.css         Charte graphique commune : couleurs, boutons, écrans
-│   └── jeux.css          Styles propres à chacun des quatre jeux
+│   └── jeux.css          Styles propres à chacun des cinq jeux
 │
 ├── js/
 │   ├── stockage.js       Enregistrement local : parties en cours et records
-│   ├── outils.js         Fonctions partagées : hasard, chronomètre, modale
+│   ├── outils.js         Fonctions partagées : hasard, chronomètre, modale, sons
 │   ├── sudoku.js         Jeu 1 — génération + règles
 │   ├── mots-meles.js     Jeu 2 — listes de mots, placement, glissement
 │   ├── demineur.js       Jeu 3 — pose des mines, révélation en cascade
 │   ├── memoire.js        Jeu 4 — distribution des cartes, comparaison
+│   ├── labyrinthe-moteur.js  Jeu 5 — génération et résolution (sans affichage)
+│   ├── labyrinthe.js     Jeu 5 — Canvas, contrôles, sons, sauvegarde
 │   └── app.js            Menu, navigation, service worker, installation
 │
 ├── icones/               Icônes de l'application (PNG)
-└── captures/             Captures d'écran affichées dans ce fichier
-                          (non utilisées par l'application)
+├── captures/             Captures d'écran affichées dans ce fichier
+│                         (non utilisées par l'application)
+└── tests/
+    └── test-labyrinthe.js   Vérifications automatiques du moteur du Labyrinthe
 ```
+
+Le détail technique du Labyrinthe (algorithmes, format de sauvegarde, « code
+du labyrinthe ») est dans `ARCHITECTURE.md`.
 
 ### Comment les jeux se branchent sur le menu
 
@@ -123,7 +131,7 @@ window.Jeux['sudoku'] = {
 ```
 
 `app.js` lit ce registre et construit le menu automatiquement. **Pour ajouter un
-cinquième jeu**, il suffit donc de créer un fichier sur le même modèle, de
+nouveau jeu**, il suffit donc de créer un fichier sur le même modèle, de
 l'ajouter dans `index.html`, dans la liste `ORDRE_DES_JEUX` de `app.js`, et dans
 la liste du `service-worker.js`.
 
@@ -152,6 +160,9 @@ Chaque fichier de jeu commence par un tableau `NIVEAUX` bien visible :
 - **Mots Mêlés** : `taille`, `nbMots` et `directions`.
 - **Démineur** : `lignes`, `colonnes` et `mines`.
 - **Mémoire** : `paires` et `colonnes`.
+- **Labyrinthe** : deux objets `DIFFICULTES` et `TAILLES` dans
+  `js/labyrinthe-moteur.js` (algorithme, boucles, indices, brouillard, taille
+  de la grille) — voir `ARCHITECTURE.md` pour le détail.
 
 ### Changer les couleurs
 
@@ -168,7 +179,7 @@ voir **l'ancienne version**.
 `service-worker.js` :
 
 ```js
-const VERSION = 'jeux-reflexion-v2';   // v1 → v2
+const VERSION = 'jeux-reflexion-v3';   // v2 → v3
 ```
 
 Le navigateur détectera alors un service worker différent, retéléchargera tous
@@ -182,7 +193,8 @@ Tout est enregistré **uniquement sur votre appareil**, via `localStorage` :
 
 - la partie en cours de chaque jeu (reprise automatique au rechargement) ;
 - les meilleurs temps par niveau (et par thème pour les Mots Mêlés et la Mémoire) ;
-- le meilleur nombre de coups pour le jeu de Mémoire.
+- le meilleur nombre de coups pour le jeu de Mémoire, et le meilleur nombre de
+  pas pour chaque combinaison difficulté/taille du Labyrinthe.
 
 Rien n'est envoyé sur internet, il n'y a ni compte ni publicité ni traceur.
 Vider les données du site dans le navigateur efface les scores.
@@ -208,6 +220,12 @@ la même lettre au point de croisement.
 la case cliquée et ses huit voisines : le premier clic ouvre donc toujours une
 zone. La révélation en cascade utilise une pile plutôt que la récursion, afin de
 ne pas saturer la mémoire sur la grande grille du niveau Expert.
+
+**Labyrinthe.** Génération à graine (`mulberry32`), entièrement itérative :
+retour arrière, Prim ou Wilson selon la difficulté, plus une passe de
+« boucles » facultative. Départ et arrivée choisis par double parcours en
+largeur (BFS) pour les éloigner au maximum. Détail complet (algorithmes,
+format de sauvegarde, « code du labyrinthe ») dans `ARCHITECTURE.md`.
 
 **Compatibilité.** Les interactions utilisent les *événements pointeur*
 (`pointerdown`, `pointermove`, `pointerup`) : un seul et même code fonctionne à

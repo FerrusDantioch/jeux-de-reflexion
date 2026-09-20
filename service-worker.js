@@ -26,7 +26,7 @@
      C'est une regle de securite des navigateurs, pas une limite de ce code.
    ========================================================================== */
 
-const VERSION = 'jeux-reflexion-v2';
+const VERSION = 'jeux-reflexion-v3';
 const NOM_DU_CACHE = VERSION;
 
 /* Liste EXHAUSTIVE des fichiers necessaires au fonctionnement hors-ligne.
@@ -44,6 +44,8 @@ const FICHIERS_A_METTRE_EN_CACHE = [
   './js/mots-meles.js',
   './js/demineur.js',
   './js/memoire.js',
+  './js/labyrinthe-moteur.js',
+  './js/labyrinthe.js',
   './js/app.js',
   './icones/favicon.png',
   './icones/icone-180.png',

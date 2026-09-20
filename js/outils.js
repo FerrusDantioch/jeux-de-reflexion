@@ -276,3 +276,111 @@ class Chrono {
     return this.debut !== null;
   }
 }
+
+
+/* ==========================================================================
+   Sons - petits effets sonores synthetises (Web Audio API)
+   --------------------------------------------------------------------------
+   POURQUOI SYNTHETISER AU LIEU D'UTILISER DES FICHIERS AUDIO ?
+   Un fichier .mp3 ou .wav pese plusieurs dizaines de kilo-octets et doit etre
+   telecharge puis mis en cache par le service worker. En fabriquant les sons
+   directement avec du code (un << oscillateur >> qui produit une frequence,
+   dont on fait monter puis descendre le volume), on obtient des bips tres
+   courts, sans aucun fichier, ce qui garde l'application ultra-legere.
+
+   Ce module est partage : n'importe quel jeu peut appeler Sons.jouer('pas'),
+   par exemple, sans avoir a re-ecrire la moindre ligne de Web Audio API.
+   ========================================================================== */
+const Sons = (function () {
+
+  const CLE_ACTIF = 'reglages.son';
+  let actif = Stockage.lire(CLE_ACTIF, true);
+
+  // Le contexte audio n'est cree qu'au premier son joue : les navigateurs
+  // interdisent de demarrer du son avant une interaction de l'utilisateur
+  // (clic, appui), et le creer trop tot declencherait une erreur inutile.
+  let contexte = null;
+  function obtenirContexte() {
+    if (contexte) return contexte;
+    const Constructeur = window.AudioContext || window.webkitAudioContext;
+    if (!Constructeur) return null;
+    contexte = new Constructeur();
+    return contexte;
+  }
+
+  /**
+   * Joue une seule note synthetisee.
+   * @param {number} frequence      en Hz (les aigus sont plus percutants)
+   * @param {number} duree          en secondes
+   * @param {string} [forme]        'sine' (doux), 'triangle' ou 'square' (dur)
+   * @param {number} [delai]        decalage de depart, en secondes
+   * @param {number} [volume]       0 a 1
+   */
+  function note(ctx, frequence, duree, forme, delai, volume) {
+    const oscillateur = ctx.createOscillator();
+    const gain = ctx.createGain();
+    oscillateur.type = forme || 'sine';
+    oscillateur.frequency.value = frequence;
+
+    const debut = ctx.currentTime + (delai || 0);
+    // Enveloppe de volume : montee quasi instantanee, puis descente douce.
+    // Sans cette descente ("fade out"), chaque son se terminerait par un
+    // desagreable petit "clic" audible.
+    gain.gain.setValueAtTime(0, debut);
+    gain.gain.linearRampToValueAtTime(volume || 0.2, debut + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.0001, debut + duree);
+
+    oscillateur.connect(gain);
+    gain.connect(ctx.destination);
+    oscillateur.start(debut);
+    oscillateur.stop(debut + duree + 0.02);
+  }
+
+  const EFFETS = {
+    // Un pas : un tout petit clic aigu, discret car tres frequent.
+    pas: function (ctx) { note(ctx, 720, 0.05, 'sine', 0, 0.12); },
+
+    // Mur heurte : un son grave et bref, qui evoque un "cognement".
+    mur: function (ctx) {
+      note(ctx, 160, 0.09, 'square', 0, 0.14);
+      note(ctx, 110, 0.09, 'square', 0.01, 0.10);
+    },
+
+    // Indice : un petit carillon a deux notes montantes.
+    indice: function (ctx) {
+      note(ctx, 660, 0.12, 'triangle', 0, 0.16);
+      note(ctx, 990, 0.16, 'triangle', 0.1, 0.16);
+    },
+
+    // Victoire : un court arpege ascendant, plus long et plus joyeux.
+    victoire: function (ctx) {
+      [523, 659, 784, 1047].forEach(function (frequence, i) {
+        note(ctx, frequence, 0.22, 'triangle', i * 0.09, 0.18);
+      });
+    }
+  };
+
+  /** Joue un effet nomme ('pas', 'mur', 'indice' ou 'victoire'), sauf si coupe. */
+  function jouer(nomEffet) {
+    if (!actif) return;
+    const effet = EFFETS[nomEffet];
+    if (!effet) return;
+    try {
+      const ctx = obtenirContexte();
+      if (!ctx) return;
+      // Un navigateur peut suspendre le contexte audio (economie d'energie) :
+      // on le relance au besoin avant de jouer le son.
+      if (ctx.state === 'suspended') ctx.resume();
+      effet(ctx);
+    } catch (e) { /* son non supporte : sans importance pour le jeu */ }
+  }
+
+  function estActif() { return actif; }
+
+  function activer(valeur) {
+    actif = !!valeur;
+    Stockage.ecrire(CLE_ACTIF, actif);
+  }
+
+  return { jouer: jouer, estActif: estActif, activer: activer };
+})();
