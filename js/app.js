@@ -303,6 +303,19 @@ const App = (function () {
     }).catch(function (erreur) {
       console.warn('Service worker non installe :', erreur);
     });
+    demanderStockagePersistant();
+  }
+
+  /* Par defaut, le navigateur peut effacer de lui-meme la copie hors-ligne
+     (manque de place, application peu utilisee) : elle ne s'ouvrirait alors
+     plus sans reseau. persist() lui demande de la conserver. Le navigateur
+     reste libre de refuser ; dans ce cas rien ne change, l'appli marche
+     comme avant. */
+  function demanderStockagePersistant() {
+    if (!navigator.storage || !navigator.storage.persist) return;
+    navigator.storage.persisted().then(function (dejaPersistant) {
+      if (!dejaPersistant) return navigator.storage.persist();
+    }).catch(function () {});
   }
 
   /* ======================================================================
