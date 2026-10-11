@@ -87,3 +87,12 @@ considérer le jeu terminé.
       utilisable : le recopier dans le champ « Code du labyrinthe » de
       l'écran de configuration reproduit EXACTEMENT le même labyrinthe
       (mêmes murs, même départ, même arrivée).
+
+## Démineur (appui long au doigt)
+
+- [ ] Sur un téléphone Android, un **appui long** sur une case couverte pose
+      un drapeau, et un second appui long le retire. Le drapeau ne doit
+      jamais apparaître puis disparaître aussitôt : Android envoie son
+      propre signal d'appui long en plus de celui du jeu, et le code ne
+      doit en tenir compte qu'une seule fois (corrigé en octobre 2026,
+      impossible à vérifier sans un vrai téléphone).

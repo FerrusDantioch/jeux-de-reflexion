@@ -1,6 +1,6 @@
 # Jeux de Réflexion — notes pour Claude
 
-PWA de quatre jeux (Sudoku, Mots Mêlés, Démineur, Mémoire) en **HTML/CSS/JS pur,
+PWA de cinq jeux (Sudoku, Mots Mêlés, Démineur, Mémoire, Labyrinthe) en **HTML/CSS/JS pur,
 sans aucune dépendance ni étape de compilation**. Code et commentaires en
 français, rédigés pour un développeur débutant : conserver ce niveau
 d'explication dans toute modification.

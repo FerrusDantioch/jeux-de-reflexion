@@ -118,7 +118,7 @@ window.Jeux = window.Jeux || {};
       directions: [DIRECTIONS.droite, DIRECTIONS.bas, DIRECTIONS.diagonaleBD, DIRECTIONS.diagonaleHD]
     },
     {
-      id: 'difficile', nom: 'Difficile', detail: 'Grille 14x14, 12 mots, mots a l\'envers',
+      id: 'difficile', nom: 'Difficile', detail: 'Grille 14x14, 12 mots, mots à l\'envers',
       taille: 14, nbMots: 12, longueurMax: 12,
       directions: [DIRECTIONS.droite, DIRECTIONS.bas, DIRECTIONS.diagonaleBD, DIRECTIONS.diagonaleHD,
                    DIRECTIONS.gauche, DIRECTIONS.haut, DIRECTIONS.diagonaleHG, DIRECTIONS.diagonaleBG]
@@ -241,7 +241,7 @@ window.Jeux = window.Jeux || {};
 
     const bandeau = Outils.creer('div', { classe: 'bandeau-jeu' });
     const infoTemps  = creerInfo('Temps', '00:00');
-    const infoTrouves = creerInfo('Trouves', '0 / 0');
+    const infoTrouves = creerInfo('Trouvés', '0 / 0');
     const infoRecord = creerInfo('Record', '--:--');
     bandeau.append(infoTemps.bloc, infoTrouves.bloc, infoRecord.bloc);
     conteneur.appendChild(bandeau);
@@ -505,7 +505,7 @@ window.Jeux = window.Jeux || {};
 
     Outils.modale({
       titre: record ? 'Nouveau record !' : 'Bravo !',
-      message: 'Les ' + etat.mots.length + ' mots ont ete trouves en ' +
+      message: 'Les ' + etat.mots.length + ' mots ont été trouvés en ' +
                Outils.formaterTemps(temps) + '.',
       boutons: [
         { texte: 'Nouvelle grille', valeur: 'nouvelle', principal: true },
@@ -523,7 +523,7 @@ window.Jeux = window.Jeux || {};
       message: 'La grille en cours sera perdue.',
       boutons: [
         { texte: 'Nouvelle grille', valeur: true, principal: true },
-        { texte: 'Continuer a jouer', valeur: false }
+        { texte: 'Continuer à jouer', valeur: false }
       ]
     }).then(function (confirme) {
       if (confirme) lancerPartie(etat.theme, etat.niveau, false);
@@ -577,7 +577,7 @@ window.Jeux = window.Jeux || {};
       Parties.effacer(ID);
     }
 
-    App.definirTitre('Mots Meles - ' + trouverTheme(etat.theme).nom);
+    App.definirTitre('Mots Mêlés - ' + trouverTheme(etat.theme).nom);
 
     dessinerGrille();
     // Les mots deja trouves lors d'une partie reprise doivent rester barres.
@@ -603,9 +603,9 @@ window.Jeux = window.Jeux || {};
 
   window.Jeux[ID] = {
     id: ID,
-    nom: 'Mots Meles',
+    nom: 'Mots Mêlés',
     emoji: '🔤',
-    description: '5 themes francais, grilles generees aleatoirement.',
+    description: '5 thèmes français, grilles générées aléatoirement.',
     themes: THEMES.map(function (t) { return { id: t.id, nom: t.nom }; }),
     niveaux: NIVEAUX,
 

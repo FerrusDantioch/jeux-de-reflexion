@@ -58,7 +58,7 @@ window.Jeux = window.Jeux || {};
   // Petits textes d'aide affiches sous chaque bouton de difficulte, sur
   // l'ecran de configuration.
   const DETAIL_DIFFICULTE = {
-    facile:    'Plusieurs chemins possibles - indices illimites',
+    facile:    'Plusieurs chemins possibles - indices illimités',
     normal:    'Un seul chemin - 3 indices',
     difficile: 'Beaucoup d\'impasses - 1 indice',
     expert:    'Brouillard autour du joueur - aucun indice'
@@ -159,11 +159,11 @@ window.Jeux = window.Jeux || {};
 
     conteneur.appendChild(Outils.creer('p', {
       classe: 'intro',
-      texte: 'Choisissez la difficulte et la taille, ou entrez le code d\'un labyrinthe precis.'
+      texte: 'Choisissez la difficulté et la taille, ou entrez le code d\'un labyrinthe précis.'
     }));
 
     const blocDifficulte = Outils.creer('div', { classe: 'bloc-options' });
-    blocDifficulte.appendChild(Outils.creer('h3', { classe: 'titre-option', texte: 'Difficulte' }));
+    blocDifficulte.appendChild(Outils.creer('h3', { classe: 'titre-option', texte: 'Difficulté' }));
     const grilleDifficulte = Outils.creer('div', { classe: 'grille-choix-labyrinthe' });
     blocDifficulte.appendChild(grilleDifficulte);
     conteneur.appendChild(blocDifficulte);
@@ -223,9 +223,9 @@ window.Jeux = window.Jeux || {};
     conteneur.appendChild(blocCode);
 
     const blocReglages = Outils.creer('div', { classe: 'bloc-options' });
-    blocReglages.appendChild(Outils.creer('h3', { classe: 'titre-option', texte: 'Reglages' }));
+    blocReglages.appendChild(Outils.creer('h3', { classe: 'titre-option', texte: 'Réglages' }));
     const ligneReglages = Outils.creer('div', { classe: 'liste-choix' });
-    ligneReglages.appendChild(creerBoutonBascule('Manette a l\'ecran', reglages.manette, function (v) { ecrireReglages({ manette: v }); }));
+    ligneReglages.appendChild(creerBoutonBascule('Manette à l\'écran', reglages.manette, function (v) { ecrireReglages({ manette: v }); }));
     ligneReglages.appendChild(creerBoutonBascule('Son', Sons.estActif(), function (v) { Sons.activer(v); }));
     ligneReglages.appendChild(creerBoutonBascule('Vibrations', reglages.vibrations, function (v) { ecrireReglages({ vibrations: v }); }));
     blocReglages.appendChild(ligneReglages);
@@ -327,7 +327,7 @@ window.Jeux = window.Jeux || {};
       const boutonApercu = Outils.creer('button', {
         classe: 'bouton-apercu',
         texte: '\u{1F5FA}',
-        attributs: { type: 'button', 'aria-label': 'Apercu global du labyrinthe' }
+        attributs: { type: 'button', 'aria-label': 'Aperçu global du labyrinthe' }
       });
       boutonApercu.addEventListener('click', afficherApercu);
       zone.appendChild(boutonApercu);
@@ -695,6 +695,9 @@ window.Jeux = window.Jeux || {};
 
   function gestionnaireClavier(evenement) {
     if (!etat) return;
+    // Une fenetre est ouverte (confirmation, pause, victoire) : le joueur ne
+    // doit pas pouvoir se deplacer derriere elle sans la voir.
+    if (!document.getElementById('fond-modale').hidden) return;
     const direction = TOUCHE_VERS_DIRECTION[evenement.code];
     if (direction) { evenement.preventDefault(); tenterDeplacement(direction); return; }
     if (evenement.code === 'Escape' || evenement.code === 'KeyP') { evenement.preventDefault(); basculerPause(); return; }
@@ -763,7 +766,7 @@ window.Jeux = window.Jeux || {};
 
   function declencherIndice() {
     if (!etat || etat.terminee || enPause) return;
-    if (etat.indicesRestants <= 0) { Outils.info('Plus d\'indice disponible pour cette difficulte.'); return; }
+    if (etat.indicesRestants <= 0) { Outils.info('Plus d\'indice disponible pour cette difficulté.'); return; }
 
     const chemin = Moteur.resoudre(etat.murs, etat.largeur, etat.hauteur, etat.joueur, etat.arrivee);
     if (!chemin) return;
@@ -819,7 +822,7 @@ window.Jeux = window.Jeux || {};
     c.fill();
 
     overlay.appendChild(canvasApercu);
-    overlay.appendChild(Outils.creer('p', { classe: 'astuce-apercu', texte: 'Touchez l\'ecran pour revenir a la partie.' }));
+    overlay.appendChild(Outils.creer('p', { classe: 'astuce-apercu', texte: 'Touchez l\'écran pour revenir à la partie.' }));
     overlay.addEventListener('click', function () { overlay.remove(); });
     vue.conteneurJeu.appendChild(overlay);
   }
@@ -832,7 +835,7 @@ window.Jeux = window.Jeux || {};
       message: 'La partie en cours sera perdue.',
       boutons: [
         { texte: 'Nouveau labyrinthe', valeur: true, principal: true },
-        { texte: 'Continuer a jouer', valeur: false }
+        { texte: 'Continuer à jouer', valeur: false }
       ]
     }).then(function (confirme) {
       if (confirme) demarrerPartie(etat.difficulte, etat.taille, null);
@@ -856,7 +859,7 @@ window.Jeux = window.Jeux || {};
   function copierCode(code) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(code)
-        .then(function () { Outils.info('Code copie : ' + code); })
+        .then(function () { Outils.info('Code copié : ' + code); })
         .catch(function () { Outils.info('Code : ' + code); });
     } else {
       Outils.info('Code : ' + code);
@@ -893,13 +896,13 @@ window.Jeux = window.Jeux || {};
       '<p>Code du labyrinthe : <code>' + code + '</code></p>';
 
     Outils.modale({
-      titre: (recordTemps || recordPas) ? 'Nouveau record !' : 'Labyrinthe resolu !',
+      titre: (recordTemps || recordPas) ? 'Nouveau record !' : 'Labyrinthe résolu !',
       messageHtml: corps,
       boutons: [
-        { texte: 'Rejouer le meme', valeur: 'meme', principal: true },
+        { texte: 'Rejouer le même', valeur: 'meme', principal: true },
         { texte: 'Nouveau labyrinthe', valeur: 'nouveau' },
         { texte: 'Copier le code', valeur: 'copier' },
-        { texte: 'Changer les reglages', valeur: 'reglages' }
+        { texte: 'Changer les réglages', valeur: 'reglages' }
       ]
     }).then(function (choix) {
       if (choix === 'meme') demarrerPartie(etat.difficulte, etat.taille, etat.graine);
@@ -1006,14 +1009,14 @@ window.Jeux = window.Jeux || {};
      ====================================================================== */
 
   const NIVEAUX_MENU = [
-    { id: 'jouer', nom: 'Jouer', detail: 'Difficulte et taille au choix, ou code de partage' }
+    { id: 'jouer', nom: 'Jouer', detail: 'Difficulté et taille au choix, ou code de partage' }
   ];
 
   window.Jeux[ID] = {
     id: ID,
     nom: 'Labyrinthe',
     emoji: '\u{1F9ED}', // boussole
-    description: '4 difficultes, 4 tailles, labyrinthes partageables par code.',
+    description: '4 difficultés, 4 tailles, labyrinthes partageables par code.',
     themes: null,
     niveaux: NIVEAUX_MENU,
 
