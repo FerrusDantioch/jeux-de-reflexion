@@ -26,7 +26,7 @@
      C'est une regle de securite des navigateurs, pas une limite de ce code.
    ========================================================================== */
 
-const VERSION = 'jeux-reflexion-v3';
+const VERSION = 'jeux-reflexion-v4';
 const NOM_DU_CACHE = VERSION;
 
 /* Liste EXHAUSTIVE des fichiers necessaires au fonctionnement hors-ligne.
@@ -65,7 +65,13 @@ self.addEventListener('install', function (evenement) {
       .then(function (cache) {
         // addAll echoue en bloc si UN SEUL fichier est introuvable : c'est
         // voulu, cela evite une installation a moitie faite.
-        return cache.addAll(FICHIERS_A_METTRE_EN_CACHE);
+        // { cache: 'reload' } oblige a reprendre chaque fichier sur le
+        // serveur, sans passer par le petit cache du navigateur (GitHub Pages
+        // le garde 10 minutes) : sinon, deux mises a jour publiees coup sur
+        // coup pourraient ranger d'anciens fichiers sous la nouvelle version.
+        return cache.addAll(FICHIERS_A_METTRE_EN_CACHE.map(function (fichier) {
+          return new Request(fichier, { cache: 'reload' });
+        }));
       })
       .then(function () {
         // Prend la main immediatement au lieu d'attendre la fermeture des

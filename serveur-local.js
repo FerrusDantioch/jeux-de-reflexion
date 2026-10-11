@@ -44,14 +44,23 @@ const TYPES_MIME = {
 
 const serveur = http.createServer(function (requete, reponse) {
   // On enleve l'eventuelle partie « ?quelque-chose » de l'adresse.
-  let adresse = decodeURIComponent(requete.url.split('?')[0]);
+  let adresse;
+  try {
+    adresse = decodeURIComponent(requete.url.split('?')[0]);
+  } catch (e) {
+    // Adresse mal formee (« %E0 » seul, par exemple) : on refuse poliment
+    // au lieu de laisser le serveur s'arreter net.
+    reponse.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
+    reponse.end('Adresse invalide');
+    return;
+  }
   if (adresse === '/') adresse = '/index.html';
 
   const fichier = path.join(RACINE, adresse);
 
   // Securite elementaire : interdire de sortir du dossier de l'application
   // avec une adresse du genre « /../../mes-documents ».
-  if (!fichier.startsWith(RACINE)) {
+  if (fichier !== RACINE && !fichier.startsWith(RACINE + path.sep)) {
     reponse.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
     reponse.end('Acces interdit');
     return;

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   outils.js - Petites fonctions utilitaires partagees par les quatre jeux
+   outils.js - Petites fonctions utilitaires partagees par les cinq jeux
    --------------------------------------------------------------------------
    Regrouper ces fonctions evite de recopier le meme code dans sudoku.js,
    mots-meles.js, demineur.js et memoire.js. Si un jour il faut corriger le

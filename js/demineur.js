@@ -28,8 +28,8 @@ window.Jeux = window.Jeux || {};
      ====================================================================== */
 
   const NIVEAUX = [
-    { id: 'debutant',      nom: 'Debutant',      lignes: 9,  colonnes: 9,  mines: 10, detail: '9 x 9, 10 mines' },
-    { id: 'intermediaire', nom: 'Intermediaire', lignes: 16, colonnes: 16, mines: 40, detail: '16 x 16, 40 mines' },
+    { id: 'debutant',      nom: 'Débutant',      lignes: 9,  colonnes: 9,  mines: 10, detail: '9 x 9, 10 mines' },
+    { id: 'intermediaire', nom: 'Intermédiaire', lignes: 16, colonnes: 16, mines: 40, detail: '16 x 16, 40 mines' },
     { id: 'expert',        nom: 'Expert',        lignes: 16, colonnes: 30, mines: 99, detail: '16 x 30, 99 mines' }
   ];
 
@@ -145,7 +145,7 @@ window.Jeux = window.Jeux || {};
     const cadre = Outils.creer('div', { classe: 'cadre-demineur' });
     const grille = Outils.creer('div', {
       classe: 'grille-demineur',
-      attributs: { role: 'grid', 'aria-label': 'Grille du demineur' }
+      attributs: { role: 'grid', 'aria-label': 'Grille du démineur' }
     });
     cadre.appendChild(grille);
     conteneur.appendChild(cadre);
@@ -162,7 +162,7 @@ window.Jeux = window.Jeux || {};
 
     const aide = Outils.creer('p', {
       classe: 'pied-page',
-      texte: 'Clic droit ou appui long pour poser un drapeau. Appuyez sur un chiffre deja decouvert pour ouvrir ses voisines.'
+      texte: 'Clic droit ou appui long pour poser un drapeau. Appuyez sur un chiffre déjà découvert pour ouvrir ses voisines.'
     });
     conteneur.appendChild(aide);
 
@@ -180,7 +180,7 @@ window.Jeux = window.Jeux || {};
       etat.modeDrapeau = !etat.modeDrapeau;
       boutonDrapeau.classList.toggle('actif', etat.modeDrapeau);
       Outils.info(etat.modeDrapeau ? 'Mode drapeau : chaque appui pose un drapeau.'
-                                   : 'Mode normal : chaque appui decouvre la case.');
+                                   : 'Mode normal : chaque appui découvre la case.');
     });
     boutonNouvelle.addEventListener('click', demanderNouvellePartie);
 
@@ -240,10 +240,19 @@ window.Jeux = window.Jeux || {};
   function brancherEvenements(grille) {
 
     // --- Souris : clic droit = drapeau -------------------------------
+    // ATTENTION : sur Android, un appui long au doigt envoie AUSSI cet
+    // evenement « contextmenu », en plus de notre propre minuteur d'appui
+    // long (plus bas). Sans precaution, le drapeau serait pose par l'un puis
+    // aussitot retire par l'autre. On retient donc si l'appui en cours a
+    // deja bascule un drapeau : chaque appui ne le fait qu'une seule fois.
     grille.addEventListener('contextmenu', function (evenement) {
       evenement.preventDefault();       // pas de menu contextuel du navigateur
+      if (appuiLongDeclenche) return;   // le minuteur d'appui long l'a deja fait
+      clearTimeout(minuteurAppuiLong);  // et il ne le refera pas
       const index = indexDe(evenement.target);
-      if (index !== null) basculerDrapeau(index);
+      if (index === null) return;
+      appuiLongDeclenche = true;        // le « clic » qui suit eventuellement sera ignore
+      basculerDrapeau(index);
     });
 
     // --- Tactile : appui long = drapeau ------------------------------
@@ -254,6 +263,7 @@ window.Jeux = window.Jeux || {};
       if (index === null) return;
       departAppui = { x: evenement.clientX, y: evenement.clientY };
       minuteurAppuiLong = setTimeout(function () {
+        if (appuiLongDeclenche) return;  // « contextmenu » est passe avant nous
         appuiLongDeclenche = true;
         basculerDrapeau(index);
         Outils.vibrer(35);
@@ -472,10 +482,10 @@ window.Jeux = window.Jeux || {};
 
     const niveau = trouverNiveau(etat.niveau);
     Outils.modale({
-      titre: resultat === 'gagne' ? (record ? 'Nouveau record !' : 'Terrain deminé !') : 'Boum !',
+      titre: resultat === 'gagne' ? (record ? 'Nouveau record !' : 'Terrain déminé !') : 'Boum !',
       message: resultat === 'gagne'
-        ? 'Niveau ' + niveau.nom + ' termine en ' + Outils.formaterTemps(etat.temps) + '.'
-        : 'Vous avez decouvert une mine. Les autres mines sont maintenant visibles.',
+        ? 'Niveau ' + niveau.nom + ' terminé en ' + Outils.formaterTemps(etat.temps) + '.'
+        : 'Vous avez découvert une mine. Les autres mines sont maintenant visibles.',
       boutons: [
         { texte: 'Rejouer', valeur: 'rejouer', principal: true },
         { texte: 'Retour au menu', valeur: 'menu' }
@@ -493,7 +503,7 @@ window.Jeux = window.Jeux || {};
       message: 'La partie en cours sera perdue.',
       boutons: [
         { texte: 'Nouvelle partie', valeur: true, principal: true },
-        { texte: 'Continuer a jouer', valeur: false }
+        { texte: 'Continuer à jouer', valeur: false }
       ]
     }).then(function (confirme) {
       if (confirme) lancerPartie(etat.niveau, false);
@@ -538,7 +548,7 @@ window.Jeux = window.Jeux || {};
       Parties.effacer(ID);
     }
 
-    App.definirTitre('Demineur - ' + trouverNiveau(etat.niveau).nom);
+    App.definirTitre('Démineur - ' + trouverNiveau(etat.niveau).nom);
 
     dessinerGrille();
     afficherRecord();
@@ -562,7 +572,7 @@ window.Jeux = window.Jeux || {};
 
   window.Jeux[ID] = {
     id: ID,
-    nom: 'Demineur',
+    nom: 'Démineur',
     emoji: MINE,
     description: 'Trois niveaux, premier clic toujours sans danger.',
     themes: null,
