@@ -43,7 +43,7 @@ uniquement du HTML, du CSS et du JavaScript. Tout le code est commenté en fran�
 
 ### Le plus simple (pour jouer tout de suite)
 
-Ouvrez le fichier `index.html` par un double-clic. Les quatre jeux fonctionnent,
+Ouvrez le fichier `index.html` par un double-clic. Les cinq jeux fonctionnent,
 les scores sont enregistrés.
 
 > ⚠️ Dans ce mode, **le bouton « Installer » et le vrai mode hors-ligne ne

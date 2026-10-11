@@ -8,7 +8,7 @@
      4. gerer la navigation (bouton retour, bouton « precedent » du telephone)
      5. installer le service worker qui rend l'application utilisable hors-ligne
 
-   Il est charge EN DERNIER dans index.html : a ce moment-la, les quatre jeux
+   Il est charge EN DERNIER dans index.html : a ce moment-la, les cinq jeux
    se sont deja inscrits dans window.Jeux et le menu peut donc etre construit.
    ========================================================================== */
 
@@ -67,7 +67,7 @@ const App = (function () {
     Outils.fermerModale();
 
     if (nom === 'accueil') {
-      definirTitre('Jeux de Reflexion');
+      definirTitre('Jeux de Réflexion');
       construireAccueil();       // on redessine : les records ont pu changer
     } else if (nom === 'niveaux') {
       construireEcranNiveaux();
@@ -330,7 +330,7 @@ const App = (function () {
 
   window.addEventListener('appinstalled', function () {
     boutonInstaller.hidden = true;
-    Outils.info('Application installee. Elle fonctionne desormais hors-ligne.');
+    Outils.info('Application installée. Elle fonctionne désormais hors ligne.');
   });
 
   /* ======================================================================
