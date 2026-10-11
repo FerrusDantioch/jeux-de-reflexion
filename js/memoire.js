@@ -113,7 +113,7 @@ window.Jeux = window.Jeux || {};
 
     const grille = Outils.creer('div', {
       classe: 'grille-memoire',
-      attributs: { role: 'grid', 'aria-label': 'Cartes a retourner' }
+      attributs: { role: 'grid', 'aria-label': 'Cartes à retourner' }
     });
     conteneur.appendChild(grille);
 
@@ -284,7 +284,7 @@ window.Jeux = window.Jeux || {};
     const recordTemps = Records.enregistrer(ID, 'temps', variante(), etat.temps);
     afficherRecord();
 
-    let message = 'Toutes les paires trouvees en ' + etat.coups + ' coups et ' +
+    let message = 'Toutes les paires trouvées en ' + etat.coups + ' coups et ' +
                   Outils.formaterTemps(etat.temps) + '.';
     if (recordCoups) message += ' Nouveau record de coups !';
     if (recordTemps) message += ' Nouveau record de temps !';
@@ -309,7 +309,7 @@ window.Jeux = window.Jeux || {};
       message: 'La partie en cours sera perdue.',
       boutons: [
         { texte: 'Nouvelle partie', valeur: true, principal: true },
-        { texte: 'Continuer a jouer', valeur: false }
+        { texte: 'Continuer à jouer', valeur: false }
       ]
     }).then(function (confirme) {
       if (confirme) lancerPartie(etat.theme, etat.niveau, false);
@@ -367,7 +367,7 @@ window.Jeux = window.Jeux || {};
       Parties.effacer(ID);
     }
 
-    App.definirTitre('Memoire - ' + trouverTheme(etat.theme).nom);
+    App.definirTitre('Mémoire - ' + trouverTheme(etat.theme).nom);
 
     dessinerCartes();
     majCoups();
@@ -387,9 +387,9 @@ window.Jeux = window.Jeux || {};
 
   window.Jeux[ID] = {
     id: ID,
-    nom: 'Memoire',
+    nom: 'Mémoire',
     emoji: '🃏',
-    description: 'Retrouvez les paires : 3 themes, 3 niveaux.',
+    description: 'Retrouvez les paires : 3 thèmes, 3 niveaux.',
     themes: THEMES.map(function (t) { return { id: t.id, nom: t.nom }; }),
     niveaux: NIVEAUX,
 

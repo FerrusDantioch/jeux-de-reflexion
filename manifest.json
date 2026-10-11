@@ -1,7 +1,7 @@
 {
   "name": "Jeux de Réflexion",
   "short_name": "Jeux",
-  "description": "Sudoku, Mots Mêlés, Démineur et Jeu de Mémoire. Quatre jeux de logique entièrement jouables hors-ligne.",
+  "description": "Sudoku, Mots Mêlés, Démineur, Jeu de Mémoire et Labyrinthe. Cinq jeux de logique entièrement jouables hors ligne.",
   "lang": "fr",
   "dir": "ltr",
   "start_url": "./",

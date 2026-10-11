@@ -343,7 +343,7 @@ window.Jeux = window.Jeux || {};
     const actions = Outils.creer('div', { classe: 'barre-actions' });
     const boutons = {
       annuler:   bouton('Annuler'),
-      retablir:  bouton('Retablir'),
+      retablir:  bouton('Rétablir'),
       notes:     bouton('Crayon'),
       indice:    bouton('Indice'),
       detection: bouton('Erreurs'),
@@ -593,7 +593,7 @@ window.Jeux = window.Jeux || {};
   function basculerDetection() {
     if (!etat) return;
     etat.detection = !etat.detection;
-    Outils.info(etat.detection ? 'Detection des erreurs activee' : 'Detection des erreurs desactivee');
+    Outils.info(etat.detection ? 'Détection des erreurs activée' : 'Détection des erreurs désactivée');
     rafraichir();
     sauvegarder();
   }
@@ -638,10 +638,10 @@ window.Jeux = window.Jeux || {};
   function demanderNouvellePartie() {
     Outils.modale({
       titre: 'Nouvelle grille ?',
-      message: 'La partie en cours sera definitivement perdue.',
+      message: 'La partie en cours sera définitivement perdue.',
       boutons: [
         { texte: 'Nouvelle grille', valeur: true, principal: true },
-        { texte: 'Continuer a jouer', valeur: false }
+        { texte: 'Continuer à jouer', valeur: false }
       ]
     }).then(function (confirme) {
       if (confirme) lancerPartie(etat.niveau, false);
@@ -730,7 +730,7 @@ window.Jeux = window.Jeux || {};
     }
     for (let i = 0; i < 81; i++) {
       if (etat.valeurs[i] !== etat.solution[i]) {
-        Outils.info('La grille est complete mais contient une erreur.');
+        Outils.info('La grille est complète mais contient une erreur.');
         return;
       }
     }
@@ -750,18 +750,18 @@ window.Jeux = window.Jeux || {};
     afficherRecord();
 
     const niveau = trouverNiveau(etat.niveau);
-    let message = 'Grille ' + niveau.nom.toLowerCase() + ' resolue en ' +
+    let message = 'Grille ' + niveau.nom.toLowerCase() + ' résolue en ' +
                   Outils.formaterTemps(etat.temps) + '.';
     if (etat.indicesUtilises > 0) {
       message += ' (' + etat.indicesUtilises + ' indice' +
-                 (etat.indicesUtilises > 1 ? 's' : '') + ' utilise' +
+                 (etat.indicesUtilises > 1 ? 's' : '') + ' utilisé' +
                  (etat.indicesUtilises > 1 ? 's' : '') + ' : le temps ne compte pas pour le record.)';
     } else if (record) {
       message += ' Nouveau record !';
     }
 
     Outils.modale({
-      titre: record ? 'Nouveau record !' : 'Grille resolue !',
+      titre: record ? 'Nouveau record !' : 'Grille résolue !',
       message: message,
       boutons: [
         { texte: 'Nouvelle grille', valeur: 'nouvelle', principal: true },
@@ -852,7 +852,7 @@ window.Jeux = window.Jeux || {};
     id: ID,
     nom: 'Sudoku',
     emoji: '🔢',
-    description: 'Grilles aleatoires a solution unique, 4 niveaux.',
+    description: 'Grilles aléatoires à solution unique, 4 niveaux.',
     themes: null,
     niveaux: NIVEAUX,
 
