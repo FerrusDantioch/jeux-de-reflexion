@@ -140,6 +140,15 @@ h1, h2, h3 { margin: 0; font-weight: 650; line-height: 1.25; }
 
 .intro         { margin: 0 0 var(--espace); color: var(--texte-doux); text-align: center; }
 .pied-page     { margin-top: 28px; font-size: 0.8rem; color: var(--texte-doux); text-align: center; }
+
+/* Section « A propos », sous le pied de page de l'accueil : discrete, comme lui. */
+.a-propos       { margin-top: 20px; font-size: 0.85rem; color: var(--texte-doux); text-align: center; }
+.a-propos p     { margin: 0 0 6px; }
+.a-propos-titre { font-size: 0.95rem; margin: 0 0 6px; color: var(--texte); }
+.a-propos-lien  { font-size: 0.8rem; }
+/* Le lien garde la couleur du texte autour (juste souligne) ; une adresse trop
+   longue pour un petit ecran passe a la ligne au lieu de deborder. */
+.a-propos-lien a { color: inherit; text-underline-offset: 3px; overflow-wrap: anywhere; }
 .titre-section { font-size: 1.3rem; margin-bottom: 4px; }
 
 /* ==========================================================================
