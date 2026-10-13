@@ -362,3 +362,10 @@ h1, h2, h3 { margin: 0; font-weight: 650; line-height: 1.25; }
   animation: apparition 0.2s ease-out;
 }
 .bulle-info[hidden] { display: none; }
+
+/* Note d'installation (section À propos) : inutile une fois l'application
+   installée, puisqu'elle s'ouvre alors dans sa propre fenêtre (mode
+   d'affichage autre que « browser », celui d'un onglet de navigateur). */
+@media not all and (display-mode: browser) {
+  .note-installation { display: none; }
+}
