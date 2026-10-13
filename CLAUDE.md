@@ -48,17 +48,32 @@ même modèle, puis le déclarer dans `index.html`, dans `ORDRE_DES_JEUX` de
 Déploiement : GitHub Pages, branche `main`, racine →
 https://ferrusdantioch.github.io/jeux-de-reflexion/
 
-## ⚠️ Champ `id` du manifeste : nom du dossier, jamais `./`
+## Champ `id` du manifeste : nom du dossier, jamais `./`
 
-`manifest.json` contient `"id": "/jeux-de-reflexion/"`. Chrome résout `id` par rapport à la
-**racine du domaine** (`https://ferrusdantioch.github.io/`), pas par
-rapport au dossier de l'application : `"id": "./"` (ou `"."`) désignait
-donc la racine du site, identité partagée par toutes les applications
-publiées sur `ferrusdantioch.github.io`. Chrome pouvait alors confondre
-les applications entre elles (« Cette appli est déjà installée » en
-essayant d'en installer une autre — vu sur Android en octobre 2026).
-C'est une exception voulue à la règle des chemins relatifs.
+`manifest.json` contient `"id": "/jeux-de-reflexion/"`. Chrome résout `id` par rapport à
+la **racine du domaine** (`https://ferrusdantioch.github.io/`), pas par
+rapport au dossier de l'application : `"id": "./"` (ou `"."`) donnait donc
+l'identité de la racine du site, la même pour toutes les applications qui
+l'utilisaient. C'est une exception voulue à la règle des chemins relatifs.
 
 Ne plus changer cette valeur : pour Chrome, une application déjà installée
 dont l'`id` change devient une autre application (il faut la désinstaller
 puis la réinstaller pour qu'elle reprenne les mises à jour).
+
+## ⚠️ Plusieurs applications sur `ferrusdantioch.github.io` : limite de Chrome Android
+
+Toutes les applications du portfolio partagent la même adresse d'origine
+(`ferrusdantioch.github.io`). Constaté en octobre 2026 sur le téléphone de
+l'utilisateur : **Chrome Android n'accepte d'installer qu'une seule de ces
+applications**. Dès qu'une est installée, les autres affichent « Cette appli
+est déjà installée », même avec des `id` et des `scope` tous différents
+(corriger l'`id`, ci-dessus, n'a pas suffi). **Brave installe toutes les
+applications sans problème** : ce n'est pas un défaut des applications.
+
+Contournements : installer depuis Brave, ou choisir « Créer un raccourci »
+dans Chrome (l'application s'ouvre alors dans un onglet Chrome). Solution
+durable si l'application doit être distribuée : une adresse (origine)
+distincte par application (Cloudflare Pages, Netlify, sous-domaine d'un nom
+de domaine, organisation GitHub…). À savoir aussi : une même origine
+signifie stockage (IndexedDB, localStorage) et autorisations (micro,
+notifications) partagés entre toutes ces applications.
