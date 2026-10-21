@@ -303,6 +303,24 @@ const App = (function () {
     }).catch(function (erreur) {
       console.warn('Service worker non installe :', erreur);
     });
+    demanderStockagePersistant();
+  }
+
+  /* Par defaut, le navigateur peut effacer de lui-meme la copie hors-ligne
+     (manque de place, application peu utilisee) : elle ne s'ouvrirait alors
+     plus sans reseau. persist() lui demande de la conserver.
+     Certains navigateurs (Firefox) affichent alors une fenetre d'autorisation.
+     Pour ne jamais en faire surgir une au demarrage, on ne demande que si le
+     navigateur a deja repondu « accorde » (c'est le cas de Chrome pour une
+     application installee, sans rien afficher). Sinon, on renonce en silence. */
+  function demanderStockagePersistant() {
+    if (!navigator.storage || !navigator.storage.persist || !navigator.permissions) return;
+    navigator.storage.persisted().then(function (dejaPersistant) {
+      if (dejaPersistant) return;
+      return navigator.permissions.query({ name: 'persistent-storage' }).then(function (etat) {
+        if (etat.state === 'granted') return navigator.storage.persist();
+      });
+    }).catch(function () {});
   }
 
   /* ======================================================================
