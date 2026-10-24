@@ -84,6 +84,6 @@ const serveur = http.createServer(function (requete, reponse) {
 });
 
 serveur.listen(PORT, function () {
-  console.log('Jeux de Reflexion : http://localhost:' + PORT);
+  console.log('Omni-Reflexion : http://localhost:' + PORT);
   console.log('(Ctrl+C pour arreter le serveur)');
 });

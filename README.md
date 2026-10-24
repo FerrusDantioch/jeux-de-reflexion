@@ -1,6 +1,6 @@
-# Jeux de Réflexion
+# Omni-Réflexion
 
-**▶ Jouer en ligne : https://ferrusdantioch.github.io/jeux-de-reflexion/**
+**▶ Jouer en ligne : https://ferrusdantioch.github.io/omni-reflexion/**
 
 Une application web installable (PWA) qui regroupe **cinq jeux de logique**,
 entièrement jouables **hors connexion** :
@@ -70,7 +70,7 @@ une fois l'application hébergée en ligne.
 
 ### Pour l'installer sur votre téléphone
 
-Ouvrez **https://ferrusdantioch.github.io/jeux-de-reflexion/** sur votre
+Ouvrez **https://ferrusdantioch.github.io/omni-reflexion/** sur votre
 téléphone (l'application y est publiée automatiquement à chaque modification
 envoyée sur GitHub), puis :
 
@@ -179,7 +179,7 @@ voir **l'ancienne version**.
 `service-worker.js` :
 
 ```js
-const VERSION = 'jeux-reflexion-v3';   // v2 → v3
+const VERSION = 'omni-reflexion-v11';   // v10 → v11
 ```
 
 Le navigateur détectera alors un service worker différent, retéléchargera tous

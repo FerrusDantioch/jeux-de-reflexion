@@ -67,7 +67,7 @@ const App = (function () {
     Outils.fermerModale();
 
     if (nom === 'accueil') {
-      definirTitre('Jeux de Réflexion');
+      definirTitre('Omni-Réflexion');
       construireAccueil();       // on redessine : les records ont pu changer
     } else if (nom === 'niveaux') {
       construireEcranNiveaux();

@@ -26,7 +26,12 @@
      C'est une regle de securite des navigateurs, pas une limite de ce code.
    ========================================================================== */
 
-const VERSION = 'jeux-reflexion-v9';
+const VERSION = 'omni-reflexion-v10';
+
+/* Debuts de nom de NOS caches (« jeux-reflexion- » : ancien nom de
+   l'application). Toutes les applications de ferrusdantioch.github.io
+   partagent la meme liste de caches : on ne supprime que les notres. */
+const PREFIXES_A_NOUS = ['omni-reflexion-', 'jeux-reflexion-'];
 const NOM_DU_CACHE = VERSION;
 
 /* Liste EXHAUSTIVE des fichiers necessaires au fonctionnement hors-ligne.
@@ -82,7 +87,7 @@ self.addEventListener('install', function (evenement) {
 });
 
 /* --------------------------------------------------------------------------
-   ACTIVATION : on fait le menage des anciennes versions
+   ACTIVATION : on fait le menage de NOS anciennes versions
    -------------------------------------------------------------------------- */
 self.addEventListener('activate', function (evenement) {
   evenement.waitUntil(
@@ -90,7 +95,8 @@ self.addEventListener('activate', function (evenement) {
       .then(function (noms) {
         return Promise.all(
           noms.map(function (nom) {
-            if (nom !== NOM_DU_CACHE) return caches.delete(nom);
+            var estANous = PREFIXES_A_NOUS.some(function (p) { return nom.indexOf(p) === 0; });
+            if (estANous && nom !== NOM_DU_CACHE) return caches.delete(nom);
             return null;
           })
         );

@@ -1,4 +1,4 @@
-# Jeux de Réflexion — notes pour Claude
+# Omni-Réflexion — notes pour Claude
 
 PWA de cinq jeux (Sudoku, Mots Mêlés, Démineur, Mémoire, Labyrinthe) en **HTML/CSS/JS pur,
 sans aucune dépendance ni étape de compilation**. Code et commentaires en
@@ -12,7 +12,7 @@ Après toute modification d'un fichier **mis en cache** (`index.html`, `css/`,
 `service-worker.js` :
 
 ```js
-const VERSION = 'jeux-reflexion-v2';   // → v3
+const VERSION = 'omni-reflexion-v10';   // → v11
 ```
 
 Sans ce changement, le navigateur ne détecte aucun service worker différent, ne
@@ -46,11 +46,11 @@ même modèle, puis le déclarer dans `index.html`, dans `ORDRE_DES_JEUX` de
 `app.js` et dans la liste du service worker.
 
 Déploiement : GitHub Pages, branche `main`, racine →
-https://ferrusdantioch.github.io/jeux-de-reflexion/
+https://ferrusdantioch.github.io/omni-reflexion/
 
 ## Champ `id` du manifeste : nom du dossier, jamais `./`
 
-`manifest.json` contient `"id": "/jeux-de-reflexion/"`. Chrome résout `id` par rapport à
+`manifest.json` contient `"id": "/omni-reflexion/"`. Chrome résout `id` par rapport à
 la **racine du domaine** (`https://ferrusdantioch.github.io/`), pas par
 rapport au dossier de l'application : `"id": "./"` (ou `"."`) donnait donc
 l'identité de la racine du site, la même pour toutes les applications qui
@@ -59,6 +59,11 @@ l'utilisaient. C'est une exception voulue à la règle des chemins relatifs.
 Ne plus changer cette valeur : pour Chrome, une application déjà installée
 dont l'`id` change devient une autre application (il faut la désinstaller
 puis la réinstaller pour qu'elle reprenne les mises à jour).
+
+Exception unique (octobre 2026) : l'application s'appelait « Jeux de Réflexion » et
+vivait à `/jeux-de-reflexion/`. Le renommage du dépôt a changé son adresse,
+donc son `id` : les personnes qui l'avaient installée doivent la réinstaller
+depuis la nouvelle adresse (leurs données restent, le stockage n'a pas changé).
 
 ## ⚠️ Plusieurs applications sur `ferrusdantioch.github.io` : limite de Chrome Android
 
